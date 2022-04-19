@@ -1,5 +1,5 @@
 #делает тоже самое что написано в командах в readme
-#
+#можно использовать без своего днс, а прописать его в /etc/hosts локально. там используются адреса из вывода kubectl describe ingress
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
