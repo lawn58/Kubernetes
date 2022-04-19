@@ -27,7 +27,7 @@
 **kubectl rollout undo deployment/denis-deployment --to-revision=6**                        # откат к версии image который был в 6 версии rollout history
 
 
-# Services
+# Services (в основном используется для настройки load balancer)
 
 **kubectl create deployment denis-deployment --image adv4000/k8sphp:latest**  # создаем deployment
 **kubectl get deployment** # показать все deployments
@@ -45,5 +45,60 @@
 **kubectl get svc**	       # показать все Services
 
 **kubectl describe nodes | grep ExternalIP**  # показать все external (внешние) IP со всех Worket Nodes
+
+
+# Ingress (в основном используется для замены нескольких load balancer и проксирования трафика)
+
+Здесь мы развернем 4 deployments у каждого будет свой сервис и у каждого будет 2 реплики
+Чтобы не использовать 4 load balansers мы настраиваем 1 contour ingress controller
+
+
+
+### Install Ingress Controller: Contour
+kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
+
+(сравнение разных ingress controllers https://docs.google.com/spreadsheets/d/191WWNpjJ2za6-nbG4ZoUMXMpUK8KlCIosvQB0f-oq3k/edit#gid=907731238)
+
+kubectl get services -n projectcontour envoy -o wide
+
+Get LoadBalancer IP or DNS Name and assign Your Domain to this DNS name
+
+### Create Deployments
+kubectl create deployment main   --image=adv4000/k8sphp:latest
+kubectl create deployment web1   --image=adv4000/k8sphp:version1
+kubectl create deployment web2   --image=adv4000/k8sphp:version2
+kubectl create deployment webx   --image=adv4000/k8sphp:versionx
+kubectl create deployment tomcat --image=tomcat:8.5.38
+
+### Scale Deployments
+kubectl scale deployment main  --replicas 2
+kubectl scale deployment web1  --replicas 2
+kubectl scale deployment web2  --replicas 2
+kubectl scale deployment webx  --replicas 2
+
+### Create Services, default type is: --type=ClusterIP
+kubectl expose deployment main   --port 80
+kubectl expose deployment web1   --port 80
+kubectl expose deployment web2   --port 80
+kubectl expose deployment webx   --port 80
+kubectl expose deployment tomcat --port 8080
+
+kubectl get services -o wide
+
+kubectl apply -f ingress-hosts.yaml
+kubectl apply -f ingress-paths.yaml
+kubectl get ingress
+kubectl describe ingress
+
+### Completely delete Ingress Controller: Contour
+kubectl delete ns projectcontour
+
+
+
+
+
+
+
+
 
 
