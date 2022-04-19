@@ -54,6 +54,10 @@
 
 
 
+![ingress controller](https://github.com/lawn58/Kubernetes/blob/main/ingress/ingress.png)
+
+
+
 ### Install Ingress Controller: Contour
 kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
 
