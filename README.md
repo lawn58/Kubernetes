@@ -25,3 +25,25 @@
 **kubectl rollout history deployment/denis-deployment**                                     # вывод истории обновления image на подах
 
 **kubectl rollout undo deployment/denis-deployment --to-revision=6**                        # откат к версии image который был в 6 версии rollout history
+
+
+# Services
+
+**kubectl create deployment denis-deployment --image adv4000/k8sphp:latest**  # создаем deployment
+**kubectl get deployment** # показать все deployments
+
+**kubectl scale deployment denis-deployment --replicas 4**   # создать 4 реплики 
+
+**kubectl expose deployment denis-deployment --type=ClusterIP --port 80**  # создать Service типа Cluster IP для Deployment
+
+**kubectl expose deployment denis-deployment --type=NodePort --port 80** # создать Service типа Node Port для Deployment
+
+**kubectl expose deployment denis-deploymennt --type=LoadBalancer --port 80** # создать Service типа Load Balancer для Deployment
+
+**kubectl get services**   # показать все Services
+
+**kubectl get svc**	       # показать все Services
+
+**kubectl describe nodes | grep ExternalIP**  # показать все external (внешние) IP со всех Worket Nodes
+
+
